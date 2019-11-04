@@ -6,7 +6,7 @@ import store from './store'
 
 import FastClick from 'fastclick'
 
-import 'assets/css/index.styl'
+import 'assets/style/index.styl'
 
 Vue.config.productionTip = false
 //解决移动端300ms延迟

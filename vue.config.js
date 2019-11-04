@@ -9,5 +9,12 @@ module.exports = {
                 'views': '@/views',
             }
         }
+    },
+
+    pluginOptions: {
+      'style-resources-loader': {
+        preProcessor: 'stylus',
+        patterns: []
+      }
     }
 }
