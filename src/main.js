@@ -6,6 +6,8 @@ import store from './store'
 
 import FastClick from 'fastclick'
 
+import 'assets/css/index.styl'
+
 Vue.config.productionTip = false
 //解决移动端300ms延迟
 FastClick.attach(document.body)
