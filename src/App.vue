@@ -1,19 +1,21 @@
 <template>
   <div id="app">
     <nav-header></nav-header>
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+    <tab/>
+    <router-view/>
+    <div>测试</div>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
-import navHeader from "components/m-header/m-header";
+import navHeader from "components/m-header/m-header"
+import tab from "components/tab/tab"
+
 export default {
   name: "app",
   components: {
-    HelloWorld,
-    navHeader
+    navHeader,
+    tab
   }
 };
 </script>
@@ -21,8 +23,9 @@ export default {
 
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
-@import 'assets/css/base.css';
-// @import 'assets/style/variable.styl'
-#app
-   background-color red
+// @import 'assets/css/base.css';
+@import 'assets/style/variable.styl'
+// #app
+//    background-color red
+
 </style>
