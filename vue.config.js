@@ -12,6 +12,7 @@ module.exports = {
                 'components': '@/components',
                 'network': '@/network',
                 'views': '@/views',
+                'api':'@/api'
             }
         }
     },

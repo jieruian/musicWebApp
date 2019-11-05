@@ -3,7 +3,7 @@ import App from './App.vue'
 import VueLazyLoad from 'vue-lazyload'
 import router from './router'
 import store from './store'
-
+import 'vant/lib/index.css';
 import FastClick from 'fastclick'
 
 import 'assets/style/index.styl'
@@ -11,6 +11,14 @@ import 'assets/style/index.styl'
 Vue.config.productionTip = false
 //解决移动端300ms延迟
 FastClick.attach(document.body)
+
+import {
+  Swipe,
+  SwipeItem,
+  Toast,
+} from 'vant';
+
+Vue.use(Swipe).use(SwipeItem).use(Toast);
 
 new Vue({
   router,

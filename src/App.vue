@@ -3,7 +3,6 @@
     <nav-header></nav-header>
     <tab/>
     <router-view/>
-    <div>测试</div>
   </div>
 </template>
 
