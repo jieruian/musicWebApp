@@ -1,7 +1,9 @@
 <template>
   <div class="recommend" ref="recommend">
        <div ref="scroll" class="recommend-content">
-           <miti-swiper :banners="banners" @swiperImageLoad="swiperImageLoad"></miti-swiper>
+           <miti-swiper :banners="banners" 
+           @swiperImageLoad="swiperImageLoad"
+           ></miti-swiper>
            <div class="recommend-list">
                <h1 class="list-title">热门歌单推荐</h1>
                <ul>
@@ -20,7 +22,7 @@
 import MitiSwiper from "components/swiper/MitiSwiper";
   import {
       getRecommend, 
-    //   getDiscList
+      getDiscList
   } from 'api/recommend'
 //   import {playlistMixin} from 'common/js/mixin'
   import {ERR_OK} from 'api/config'
@@ -38,13 +40,31 @@ import MitiSwiper from "components/swiper/MitiSwiper";
    },
    created() {
        this._getRecommend()
+       this._getDiscList()
    },
    methods: {
        _getRecommend(){
          getRecommend().then((res)=>{
-            console.log(res.data.slider)
+            // console.log(res.data.slider)
+             if (res.code === ERR_OK) {
             this.banners = res.data.slider
+             }else{
+
+             }
          })  
+       },
+       _getDiscList(){
+           getDiscList().then((res)=>{
+            console.log(res.data.slider)
+           if (res.code === ERR_OK) {
+           
+             }else{
+             }
+         })  
+       },
+       swiperImageLoad(){
+           console.log("图片加载完毕");
+           
        }
    },
   }

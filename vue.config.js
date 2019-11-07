@@ -16,7 +16,18 @@ module.exports = {
             }
         }
     },
-
+devServer: {
+  proxy: {
+    '/api': {
+      target: 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
+      ws : true,
+      changeOrigin: true,
+      // pathRewrite: {
+      //   '^/api': ''
+      // }
+    }
+  }
+},
     pluginOptions: {
       'style-resources-loader': {
         preProcessor: 'stylus',
@@ -42,3 +53,5 @@ function addStyleResource(rule) {
       ],
     })
 }
+
+

@@ -7,6 +7,7 @@ import 'vant/lib/index.css';
 import FastClick from 'fastclick'
 
 import 'assets/style/index.styl'
+import VueResource from 'vue-resource'
 
 Vue.config.productionTip = false
 //解决移动端300ms延迟
@@ -19,7 +20,7 @@ import {
 } from 'vant';
 
 Vue.use(Swipe).use(SwipeItem).use(Toast);
-
+Vue.use(VueResource)
 new Vue({
   router,
   store,
