@@ -10,10 +10,15 @@ const Singer = () => import('../views/singer/singer')
 
 
 // 2.创建router
-const routes = [{
-    path: '',
-    redirect: '/recommend'
-  },
+const routes = [
+   {
+     path: '/',
+     redirect: '/recommend'
+   },
+ {
+   path: '/recommend',
+   component: Recommend
+ },
   {
     path: '/rank',
     component: Rank
@@ -21,10 +26,6 @@ const routes = [{
   {
     path: '/singer',
     component: Singer
-  },
-  {
-    path: '/recommend',
-    component: Recommend
   },
   {
     path: '/search',
@@ -38,6 +39,6 @@ const routes = [{
 
 export default new VueRouter({
     base: '/',
-    mode: 'history',
+    mode: 'hash',
     routes
 });

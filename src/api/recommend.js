@@ -32,33 +32,21 @@ export function getDiscList() {
     format: 'json'
   })
 
-  return axios.get(url, {
+  return axios.get("api/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg", {
     headers: {
       referer: 'https://c.y.qq.com/',
       host: 'c.y.qq.com'
     },
+    // responseType: "json",
     params: data
   }).then((res) => {
-    console.log(res);
-    console.log(json(res.data));
-    return Promise.resolve(json(res.data))
+    console.log(res.data);
+    // console.log(json(res.data));
+    return Promise.resolve(res.data)
+  }).catch(err => {
+    var enc = new TextDecoder('utf-8')
+    var res = JSON.parse(enc.decode(new Uint8Array(err.data))) //转化成json对象
+    console.log(res)
   })
 }
-// var axios = require('axios')
-// var app = express()
-// var apiRoutes = express.Router()
 
-// apiRoutes.get('/getDiscList', function (req, res) {
-//   var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
-//   axios.get(url, {
-//     headers: {
-//       referer: 'https://c.y.qq.com/',
-//       host: 'c.y.qq.com'
-//     },
-//     params: req.query
-//   }).then((response) => {
-//     res.json(response.data)
-//   }).catch((e) => {
-//     console.log(e)
-//   })
-// })

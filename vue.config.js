@@ -19,12 +19,11 @@ module.exports = {
 devServer: {
   proxy: {
     '/api': {
-      target: 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg',
-      ws : true,
+      target: 'https://c.y.qq.com/',
       changeOrigin: true,
-      // pathRewrite: {
-      //   '^/api': ''
-      // }
+      pathRewrite: {
+        '^/api': ''
+      }
     }
   }
 },

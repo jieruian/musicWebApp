@@ -47,7 +47,7 @@ import MitiSwiper from "components/swiper/MitiSwiper";
          getRecommend().then((res)=>{
             // console.log(res.data.slider)
              if (res.code === ERR_OK) {
-            this.banners = res.data.slider
+              this.banners = res.data.slider
              }else{
 
              }
@@ -55,10 +55,11 @@ import MitiSwiper from "components/swiper/MitiSwiper";
        },
        _getDiscList(){
            getDiscList().then((res)=>{
-            console.log(res.data.slider)
+            // console.log(res.data.slider)
            if (res.code === ERR_OK) {
            
              }else{
+
              }
          })  
        },
