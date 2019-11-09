@@ -6,6 +6,13 @@ export const commonParams = {
   format: 'jsonp'
 }
 
+export const commonjParams = {
+  g_tk: 1928093487,
+  inCharset: 'utf-8',
+  outCharset: 'utf-8',
+  notice: 0,
+}
+
 export const options = {
   param: 'jsonpCallback'
 }
