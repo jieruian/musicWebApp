@@ -2,7 +2,6 @@ import jsonp from 'common/js/jsonp'
 import {
   commonParams,
   options,
-  commonjParams
 } from './config'
 import axios from 'axios'
 //获取轮播图

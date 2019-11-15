@@ -1,9 +1,9 @@
 <template>
   <div class="recommend" ref="recommend">
     <div class="loading-show" v-show="isShowRefresh">
-      <van-loading type="spinner" color="#28B8A1"  size="36"></van-loading>
+      <van-loading type="spinner" color="#28B8A1" size="36"></van-loading>
     </div>
-    
+
     <scroll
       class="recommend-content"
       ref="scroll"
@@ -19,28 +19,30 @@
       ></miti-swiper>
       <div class="recommend-list">
         <h1 class="list-title">热门歌单推荐</h1>
+        <div class="loading-container" v-show="!discList.length">
+          <loading title="加载ing"></loading>
+        </div>
         <ul>
           <li v-for="(item, index) in discList" :key="index" class="item">
             <div class="icon">
-              <img v-lazy="item.imgurl" style="height:60px;width:60px"/>
+              <img v-lazy="item.imgurl" style="height:60px;width:60px" />
             </div>
             <div class="text">
-              <h2 class="name">{{item.creator.name}}</h2>
-              <p class="desc">{{item.dissname}}</p>
+              <h2 class="name">{{ item.creator.name }}</h2>
+              <p class="desc">{{ item.dissname }}</p>
             </div>
           </li>
         </ul>
       </div>
-      </scroll>
-    </div>
-  
+    </scroll>
+  </div>
 </template>
 
 <script type="text/ecmascript-6">
 //   import Slider from 'base/slider/slider'
-//   import Loading from 'base/loading/loading'
+import Loading from "components/loading/loading";
 import MitiSwiper from "components/swiper/MitiSwiper";
-import Scroll from 'components/scroll/Scroll'
+import Scroll from "components/scroll/Scroll";
 import { getRecommend, getDiscList } from "api/recommend";
 //   import {playlistMixin} from 'common/js/mixin'
 import { ERR_OK } from "api/config";
@@ -50,13 +52,14 @@ export default {
   name: "recommend",
   components: {
     MitiSwiper,
-    Scroll
+    Scroll,
+    Loading
   },
   data() {
     return {
       banners: [],
       discList: [],
-      isShowRefresh:false,
+      isShowRefresh: false
     };
   },
   created() {
@@ -83,25 +86,28 @@ export default {
         }
       });
     },
-    scrollDelegate(){
-    
+    scrollDelegate() {},
+    loadMore() {
+      console.log("加载更多");
     },
-    loadMore(){
-    console.log("加载更多");
-    
-    },
-    refreshData(){
-      this.isShowRefresh = true
+    refreshData() {
+      this.isShowRefresh = true;
       setTimeout(() => {
-        this.isShowRefresh = false
-        this.$refs.scroll.refresh()
-      }, 3000);
+        this.$notify({
+          message: "刷新成功",
+          color: "#fff",
+          duration: 1000,
+          background: "#28B8A1"
+        });
+        this.isShowRefresh = false;
+        this.$refs.scroll.refresh();
+      }, 2000);
     },
     swiperImageLoad() {
       console.log("图片加载完毕");
       if (!this.checkloaded) {
-          this.checkloaded = true
-          this.$refs.scroll.refresh()
+        this.checkloaded = true;
+        this.$refs.scroll.refresh();
       }
     }
   }
@@ -111,17 +117,18 @@ export default {
 <style scoped lang="stylus" rel="stylesheet/stylus">
 @import '~assets/style/variable';
 
-.loading-show{
- position : fixed; 
- padding: 20px;
- top: 50%;
- left : 50%;
- width: 36px;
- height : 36px;
- background: rgba(0,0,0,0.7) ;
- transform: translateY(-18px);
- transform: translateX(-36px);
+.loading-show {
+  position: fixed;
+  padding: 20px;
+  top: 50%;
+  left: 50%;
+  width: 36px;
+  height: 36px;
+  background: rgba(0, 0, 0, 0.7);
+  transform: translateY(-18px);
+  transform: translateX(-36px);
 }
+
 .recommend {
   position: fixed;
   width: 100%;

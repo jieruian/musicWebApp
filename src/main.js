@@ -20,10 +20,13 @@ import {
   Swipe,
   SwipeItem,
   Toast,
-  Loading
+  Loading,
+  Notify,
+  IndexBar, 
+  IndexAnchor
 } from 'vant';
 
-Vue.use(Swipe).use(SwipeItem).use(Toast).use(Loading);
+Vue.use(Swipe).use(SwipeItem).use(Toast).use(Loading).use(Notify).use(IndexBar).use(IndexAnchor);
 Vue.use(VueResource)
 new Vue({
   router,
