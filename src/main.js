@@ -12,14 +12,18 @@ import VueResource from 'vue-resource'
 Vue.config.productionTip = false
 //解决移动端300ms延迟
 FastClick.attach(document.body)
-
+Vue.use(VueLazyLoad, {
+  preLoad: 1,
+  loading: require('assets/logo.png')
+})
 import {
   Swipe,
   SwipeItem,
   Toast,
+  Loading
 } from 'vant';
 
-Vue.use(Swipe).use(SwipeItem).use(Toast);
+Vue.use(Swipe).use(SwipeItem).use(Toast).use(Loading);
 Vue.use(VueResource)
 new Vue({
   router,
