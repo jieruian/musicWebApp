@@ -1,6 +1,6 @@
 <template>
   <div class="singer" ref="singer">
-  <address-book-view :data="singers"/>
+  <address-book-view :data="singers" :indexList="indexList"/>
   </div>
 </template>
 
@@ -40,7 +40,7 @@ export default {
     _getIndexTitlesList(list){
      var listBox = []
      list.forEach((item, index) => {
-         listBox.push(item.title)
+         listBox.push(item.title.substr(0,1))
      })
      return listBox
     },

@@ -1,4 +1,5 @@
 <template>
+<div class="listview">
   <scroll
     class="listview"
     ref="listview"
@@ -19,7 +20,16 @@
         </li>
       </ul>
     </ul>
+    
   </scroll>
+   <div class="list-shortcut" >
+      <ul>
+        <li v-for="(item, index) in indexList" :key="index + Math.random()" class="item">
+            {{item}}
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script>
@@ -33,11 +43,15 @@ export default {
     data: {
       type: Array,
       default: []
+    },
+    indexList:{
+      type: Array,
+      default: [] 
     }
   },
   methods: {
       scrollDelegate(){
-          
+
       }
   },
 };
@@ -86,7 +100,7 @@ export default {
 
   .list-shortcut {
     position: absolute;
-    z-index: 30;
+    z-index: 9999;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
