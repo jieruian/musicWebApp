@@ -40,13 +40,14 @@ export default {
       bounceTime:700,
       pullDownRefresh:{threshold: -10   //当下拉长度距离盒子顶部的高度超过10px的时候,就派发一个下拉刷新的事件
                     },
-      useTransition:false  // 防止iphone微信滑动卡顿
+      useTransition:true  // 防止iphone微信滑动卡顿
     });
     // 2.监听滚动的位置
     if (this.probeType == 2 || this.probeType == 3) {
+      let _this = this
       this.scroll.on("scroll", position => {
         // console.log(position);
-        this.$emit("scroll", position);
+        _this.$emit("scroll", position);
       });
     }
 
@@ -96,13 +97,13 @@ export default {
      this.scroll && this.scroll.refresh()
    },
   
-     scrollToElement() {
+    scrollToElement() {
         this.scroll && this.scroll.scrollToElement.apply(this.scroll, arguments)
       },
-       disable() {
+    disable() {
         this.scroll && this.scroll.disable()
       },
-      enable() {
+     enable() {
         this.scroll && this.scroll.enable()
       },
     
