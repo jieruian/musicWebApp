@@ -40,21 +40,5 @@ export function getDiscList() {
     return Promise.resolve(res.data)
   })
 
-  // return axios.get("api/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg", {
-  //   // headers: {
-  //   //   referer: 'https://c.y.qq.com/',
-  //   //   host: 'c.y.qq.com'
-  //   // },
-  //   responseType: "json",
-  //   params: data
-  // }).then((res) => {
-  //   console.log(res.data);
-  //   // console.log(json(res.data));
-  //   return Promise.resolve(res.data)
-  // }).catch(err => {
-  //   var enc = new TextDecoder('utf-8')
-  //   var res = JSON.parse(enc.decode(new Uint8Array(err.data))) //转化成json对象
-  //   console.log(res)
-  // })
 }
 
