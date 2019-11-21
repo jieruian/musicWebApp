@@ -4,10 +4,7 @@ var axios = require('axios')
 var app = express()
 var apiRoutes = express.Router()
 module.exports = {
-  //  chainWebpack: config => {
-  //    const types = ['vue-modules', 'vue', 'normal-modules', 'normal']
-  //    types.forEach(type => addStyleResource(config.module.rule('stylus').oneOf(type)))
-  //  },
+
     configureWebpack: {
         resolve: {
             alias: {
@@ -16,7 +13,8 @@ module.exports = {
                 'components': '@/components',
                 'network': '@/network',
                 'views': '@/views',
-                'api':'@/api'
+                'api':'@/api',
+                'base':'@/base'
             }
         }
     },

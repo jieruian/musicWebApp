@@ -12,6 +12,7 @@ import { getSingerList } from "api/singer";
 import { ERR_OK } from "api/config";
 import Singer from 'common/js/singer';
 import AddressBookView from "components/AddressBookView/AddressBookView";
+ import {mapMutations} from 'vuex'
 export default {
   name: "singer",
   components:{
@@ -28,11 +29,13 @@ export default {
   },
  
   methods: {
+  
+  
     selectSinger(item){
      this.$router.push({
       path: `/singer/${item.id}`
      })
-    // this.router.push('/singer/'+item.id)
+    this.setSinger(item)
     },
     _getSingerList() {
       getSingerList().then(res => {
@@ -51,6 +54,9 @@ export default {
      })
      return listBox
     },
+     ...mapMutations({
+       setSinger: 'SET_SINGER'
+       }),
     _normalizeSinger(list) {
         let map = {
           hot: {
@@ -93,6 +99,9 @@ export default {
         })
         return hot.concat(ret)
       },
+   
+  
+  
   },
   computed: {
    
