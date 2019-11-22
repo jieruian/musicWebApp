@@ -5,18 +5,21 @@
     <keep-alive>
      <router-view/>
     </keep-alive>
+    <player></player>
   </div>
 </template>
 
 <script>
 import navHeader from "components/m-header/m-header"
 import tab from "components/tab/tab"
+import Player from 'components/player/player'
 
 export default {
   name: "app",
   components: {
     navHeader,
-    tab
+    tab,
+    Player
   }
 };
 </script>

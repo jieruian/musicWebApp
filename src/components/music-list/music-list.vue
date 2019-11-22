@@ -25,7 +25,7 @@
       :pullUpLoad="true"
     >
       <div class="song-list-wrapper">
-        <song-list :songs="songs"></song-list>
+        <song-list :songs="songs" @select='selectItem'></song-list>
       </div>
        <div v-show="!songs.length" class="loading-container">
         <loading></loading>
@@ -41,6 +41,7 @@ import SongList from "base/song-list/song-list";
 import Loading from "components/loading/loading";
 import { ERR_OK } from "api/config";
 import { prefixStyle } from "common/js/dom";
+import { mapActions } from 'vuex';
 
 const transform = prefixStyle("transform");
 const backdrop = prefixStyle("backdrop-filter");
@@ -79,7 +80,17 @@ export default {
     },
     back() {
       this.$router.back();
-    }
+    },
+    selectItem(item,index){
+        console.log('点击歌曲');
+        this.selectPlay({
+            list: this.songs,
+            index
+            })
+    },
+    ...mapActions([
+        'selectPlay'
+    ])
   },
   mounted() {
     this.imageHeight = this.$refs.bgImage.clientHeight;

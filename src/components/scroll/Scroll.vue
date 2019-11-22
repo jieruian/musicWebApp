@@ -38,7 +38,7 @@ export default {
       probeType: this.probeType,
       pullUpLoad: this.pullUpLoad,
       bounceTime:700,
-      pullDownRefresh:{threshold: -10   //当下拉长度距离盒子顶部的高度超过10px的时候,就派发一个下拉刷新的事件
+      pullDownRefresh:{threshold: 40   //当下拉长度距离盒子顶部的高度超过10px的时候,就派发一个下拉刷新的事件
                     },
       useTransition:true  // 防止iphone微信滑动卡顿
     });
