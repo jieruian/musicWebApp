@@ -5,32 +5,33 @@ var app = express()
 var apiRoutes = express.Router()
 module.exports = {
 
-    configureWebpack: {
-        resolve: {
-            alias: {
-                'assets': '@/assets',
-                'common': '@/common',
-                'components': '@/components',
-                'network': '@/network',
-                'views': '@/views',
-                'api':'@/api',
-                'base':'@/base'
-            }
-        }
-    },
-devServer: {
-  proxy: {
-    '/api': {
-      target: 'https://c.y.qq.com/',
-      changeOrigin: true,
-      secure: false,
-      pathRewrite: {
-        '^/api': ''
+  configureWebpack: {
+    resolve: {
+      alias: {
+        'assets': '@/assets',
+        'common': '@/common',
+        'components': '@/components',
+        'network': '@/network',
+        'views': '@/views',
+        'api': '@/api',
+        'base': '@/base'
       }
     }
   },
-  //添加一个before方法
-  before(apiRoutes) {
+  devServer: {
+    proxy: {
+      '/api': {
+        // target: 'https://c.y.qq.com/',
+        target: 'http://localhost:3200/',
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
+    //添加一个before方法
+    before(apiRoutes) {
       apiRoutes.get('/api/getDiscList', (req, res) => {
         const url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg';
         axios.get(url, {
@@ -48,19 +49,19 @@ devServer: {
       });
       app.use('/api', apiRoutes);
     },
- 
-},
-    pluginOptions: {
-      'style-resources-loader': {
-        preProcessor: 'stylus',
-        patterns: [
-          //  path.resolve(__dirname, './src/assets/style/variable.styl'),
-          //   path.resolve(__dirname, './src/assets/style/reset.styl'),
-          //   path.resolve(__dirname, './src/assets/style/base.styl'),
-          //   path.resolve(__dirname, './src/assets/style/icon.styl'),
-        ]
-      }
+
+  },
+  pluginOptions: {
+    'style-resources-loader': {
+      preProcessor: 'stylus',
+      patterns: [
+        //  path.resolve(__dirname, './src/assets/style/variable.styl'),
+        //   path.resolve(__dirname, './src/assets/style/reset.styl'),
+        //   path.resolve(__dirname, './src/assets/style/base.styl'),
+        //   path.resolve(__dirname, './src/assets/style/icon.styl'),
+      ]
     }
+  }
 }
 
 function addStyleResource(rule) {
@@ -75,5 +76,3 @@ function addStyleResource(rule) {
       ],
     })
 }
-
-

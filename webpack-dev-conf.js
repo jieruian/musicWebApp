@@ -20,7 +20,7 @@ const portfinder = require('portfinder')
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
-console.log("dddddddddddddddddd");
+
 
 //增加express --start
 var appData = require('../data.json')

@@ -43,7 +43,7 @@
 import Loading from "components/loading/loading";
 import MitiSwiper from "components/swiper/MitiSwiper";
 import Scroll from "components/scroll/Scroll";
-import { getRecommend, getDiscList } from "api/recommend";
+import { getRecommend, getDiscList ,testDemo} from "api/recommend";
 //   import {playlistMixin} from 'common/js/mixin'
 import { ERR_OK } from "api/config";
 //   import {mapMutations} from 'vuex'
@@ -65,6 +65,11 @@ export default {
   created() {
     this._getRecommend();
     this._getDiscList();
+    // testDemo('/getSongListCategories').then(res => {
+    //   console.log('这是下面的测试结果：');
+    //   console.log(res);
+      
+    // })
   },
   methods: {
     _getRecommend() {
