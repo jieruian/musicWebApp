@@ -21,8 +21,8 @@ module.exports = {
   devServer: {
     proxy: {
       '/api': {
-        // target: 'https://c.y.qq.com/',
-        target: 'http://localhost:3200/',
+        target: 'https://c.y.qq.com/',
+        // target: 'http://localhost:3200/',
         changeOrigin: true,
         secure: false,
         pathRewrite: {

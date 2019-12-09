@@ -42,7 +42,7 @@ export function createSong(musicData) {
     duration: musicData.interval,
     image: `https://y.gtimg.cn/music/photo_new/T002R300x300M000${musicData.albummid}.jpg?max_age=2592000`,
     // url: `http://ws.stream.qqmusic.qq.com/${musicData.songid}.m4a?fromtag=46`
-    url: `http://58.216.6.146/amobile.music.tc.qq.com/C400003mBrF72dILfK.m4a?guid=6972026032&vkey=264360AA7F6AE3D4F28A268FBAE6F45A7AB1611B6C26547ADF4E7451361845FA74996E5E6DB4FBDEE1FE4AEF4B1C1EFEFF6145C2B7971632&uin=5278&fromtag=66&nsukey=Aw3D%2BlJ1fRF5K7XLnSTGAeQKuxy%2BJbG8F6G4ir%2BStoJkDym6dQIcUIJg4bciiyMmMtA8z9y3OfW8%2F3MpJsG5IwoxVRDFrWmFjab4Zd7EWKPGIHlEwAOLjKTePZP86RsCeSh9nbjNPxRQSlXuinv8Dt%2FMTw1jJ1QCkraI8L5K2UrEK2wIH88rpYKMmDQpaTmQxhM%2B0ujE6iJpIf8Ahf%2Fjtg%3D%3D`
+    url: `http://221.228.219.152/amobile.music.tc.qq.com/C400000tGLJl2gM0Tw.m4a?guid=6972026032&vkey=F3C1EB534E2BE04B9E7B9A862497435626F39F72AA3B87ADF76D93ABBAD217AB0A496BD40B2EF62CCE05F1DDC27D17C5E1C32EE97DB79B41&uin=5278&fromtag=66`
   })
 }
 

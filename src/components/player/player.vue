@@ -22,7 +22,7 @@
        <div class="middle">
           <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
-              <div class="cd">
+              <div class="cd" :class="cdCls">
                 <img class="image" :src="currentSong.image">
               </div>
             </div> 
@@ -38,7 +38,7 @@
               <i  class="icon-prev"></i>
             </div>
             <div class="icon i-center" >
-              <i  class="icon-play"></i>
+              <i @click="togglePlaying" :class="playIcon"></i>
             </div>
             <div class="icon i-right" >
               <i  class="icon-next"></i>
@@ -52,21 +52,22 @@
     </transition>
     <transition name="mini">
     <div class="mini-player" v-show="!fullScreen" @click="open">
-        <div class="icon">
-          <img  width="40" height="40" v-lazy='currentSong.image'>
+        <div class="icon" >
+          <img :class="cdCls" width="40" height="40" v-lazy='currentSong.image'>
         </div>
         <div class="text">
           <h2 class="name">{{currentSong.name}}</h2>
           <p class="desc">{{currentSong.singer}}</p>
         </div>
         <div class="control">
-          
+           <i @click.stop="togglePlaying" :class="miniIcon"></i>
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
         </div>
     </div>
     </transition>
+    <audio ref="audio" :src="currentSong.url" ></audio>
   </div>
 </template>
 
@@ -80,7 +81,16 @@ const transitionDuration = prefixStyle('transitionDuration')
 export default {
   name: "player",
   computed: {
-    ...mapGetters(["fullScreen", "playlist",'currentSong'])
+    cdCls() {
+        return this.playing ? 'play' : 'play pause'
+      },
+      playIcon() {
+        return this.playing ? 'icon-pause' : 'icon-play'
+      },
+      miniIcon() {
+        return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
+      },
+    ...mapGetters(["fullScreen", "playlist",'currentSong','playing'])
   },
   methods: {
       back(){
@@ -143,9 +153,26 @@ export default {
           scale
         }
       },
+      //暂停还是播放
+      togglePlaying(){
+       this.setPlayingState(!this.playing)
+      },
       ...mapMutations({
           setFullScreen:'SET_FULL_SCREEN',
+          setPlayingState:'SET_PLAYING_STATE'
       })
+  },
+  watch: {
+    currentSong(newSong, oldSong){
+      this.$nextTick(()=>{
+         this.$refs.audio.play()
+      })
+    },
+    playing(newPlay){
+      this.$nextTick(() => {
+        newPlay ? this.$refs.audio.play() : this.$refs.audio.pause()
+      })
+    }
   },
 };
 </script>
