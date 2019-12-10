@@ -31,6 +31,17 @@
         </div>
         <!-- 下半部分 -->
         <div class="bottom">
+           <!-- <div class="dot-wrapper">
+            <span class="dot" :class="{'active':currentShow==='cd'}"></span>
+            <span class="dot" :class="{'active':currentShow==='lyric'}"></span>
+          </div> -->
+          <div class="progress-wrapper">
+            <span class="time time-l">{{format(currentTime)}}</span>
+            <div class="progress-bar-wrapper">
+              <progress-bar :percent="percent" @percentChange="onProgressBarChange"></progress-bar>
+            </div>
+            <span class="time time-r">{{format(currentSong.duration)}}</span>
+          </div>
           <div class="operators">
             <div class="icon i-left" >
               <i class="icon-sequence"></i>
@@ -78,6 +89,7 @@
       :src="currentPlayURL"
       @play="ready"
       @error="error"
+      @timeupdate="updateTime"
     ></audio>
   </div>
 </template>
@@ -87,15 +99,18 @@ import { mapGetters, mapMutations } from "vuex";
 import animations from "create-keyframe-animation";
 import { getSongVKeyUrl } from "api/song";
 import { prefixStyle } from "common/js/dom";
+import progressBar from '../progress-bar/progress-bar'
 
 const transform = prefixStyle("transform");
 const transitionDuration = prefixStyle("transitionDuration");
 export default {
   name: "player",
+  components:{progressBar},
   data() {
     return {
       songReady: false,
-      currentPlayURL: ""
+      currentPlayURL: "",
+      currentTime:'',
     };
   },
   computed: {
@@ -108,8 +123,11 @@ export default {
     miniIcon() {
       return this.playing ? "icon-pause-mini" : "icon-play-mini";
     },
-     disableCls() {
+    disableCls() {
         return this.songReady ? '' : 'disable'
+      },
+    percent() {
+        return this.currentTime / this.currentSong.duration
       },
     ...mapGetters([
       "fullScreen",
@@ -126,6 +144,7 @@ export default {
     open() {
       this.setFullScreen(true);
     },
+    //上一曲
     prev() {
       if (!this.songReady) return;
       let index = this.currentIndex - 1;
@@ -136,6 +155,7 @@ export default {
       this.songReady = false;
       if (!this.playing) this.togglePlaying();
     },
+    //下一曲
     next() {
       if (!this.songReady) return;
       let index = this.currentIndex + 1;
@@ -146,12 +166,35 @@ export default {
       this.songReady = false;
       if (!this.playing) this.togglePlaying();
     },
+    //更新时间
+    updateTime(e) {
+        this.currentTime = e.target.currentTime
+      },
+    format(interval) {
+        interval = interval | 0
+        const minute = interval / 60 | 0
+        const second = this._pad(interval % 60)
+        return `${minute}:${second}`
+    },
+    //准备播放
     ready() {
       this.songReady = true;
     },
+    //播放错误
     error() {
       this.songReady = true;
     },
+    //拖拽进度条
+    onProgressBarChange(percent) {
+        const currentTime = this.currentSong.duration * percent
+        this.$refs.audio.currentTime = currentTime
+        if (!this.playing) {
+          this.togglePlaying()
+        }
+        // if (this.currentLyric) {
+        //   this.currentLyric.seek(currentTime * 1000)
+        // }
+      },
     enter(el, done) {
       const { x, y, scale } = this._getPosAndScale;
       let animation = {
@@ -217,11 +260,17 @@ export default {
       setPlayingState: "SET_PLAYING_STATE",
       setCurrentIndex: "SET_CURRENT_INDEX"
     }),
+     _pad(num, n = 2) {
+        let len = num.toString().length
+        while (len < n) {
+          num = '0' + num
+          len++
+        }
+        return num
+      },
   },
   watch: {
     currentSong(newSong, oldSong) {
-      console.log("变化");
-      console.log(newSong.mid);
 
       // this.currentPlayURL = this._getSongPlayUrl()
       getSongVKeyUrl(newSong.mid)
