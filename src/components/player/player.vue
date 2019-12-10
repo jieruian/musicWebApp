@@ -32,16 +32,16 @@
         <!-- 下半部分 -->
         <div class="bottom">
           <div class="operators">
-            <div class="icon i-left">
+            <div class="icon i-left" >
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left">
+            <div class="icon i-left" :class="disableCls">
               <i @click="prev" class="icon-prev"></i>
             </div>
-            <div class="icon i-center">
+            <div class="icon i-center" :class="disableCls">
               <i @click="togglePlaying" :class="playIcon"></i>
             </div>
-            <div class="icon i-right">
+            <div class="icon i-right" :class="disableCls">
               <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
@@ -73,7 +73,12 @@
         </div>
       </div>
     </transition>
-    <audio ref="audio" :src="currentPlayURL" @play="ready" @error="error"></audio>
+    <audio
+      ref="audio"
+      :src="currentPlayURL"
+      @play="ready"
+      @error="error"
+    ></audio>
   </div>
 </template>
 
@@ -90,11 +95,10 @@ export default {
   data() {
     return {
       songReady: false,
-      currentPlayURL:''
+      currentPlayURL: ""
     };
   },
   computed: {
-    
     cdCls() {
       return this.playing ? "play" : "play pause";
     },
@@ -104,13 +108,15 @@ export default {
     miniIcon() {
       return this.playing ? "icon-pause-mini" : "icon-play-mini";
     },
+     disableCls() {
+        return this.songReady ? '' : 'disable'
+      },
     ...mapGetters([
       "fullScreen",
       "playlist",
       "currentSong",
       "playing",
       "currentIndex",
-      "playUrl"
     ])
   },
   methods: {
@@ -211,41 +217,33 @@ export default {
       setPlayingState: "SET_PLAYING_STATE",
       setCurrentIndex: "SET_CURRENT_INDEX"
     }),
-    _getSongPlayUrl() {
-      getSongVKeyUrl("003JXflt0ohuO9")
-        .then(res => {
-          console.log("这是详情结果：");
-          console.log(res);
-          return res.response.playLists.length
-            ? res.response.playLists[1]
-            : "http://221.228.219.152/amobile.music.tc.qq.com/C400000tGLJl2gM0Tw.m4a?guid=6972026032&vkey=F3C1EB534E2BE04B9E7B9A862497435626F39F72AA3B87ADF76D93ABBAD217AB0A496BD40B2EF62CCE05F1DDC27D17C5E1C32EE97DB79B41&uin=5278&fromtag=66";
-        })
-        .catch(err => {
-          return "http://221.228.219.152/amobile.music.tc.qq.com/C400000tGLJl2gM0Tw.m4a?guid=6972026032&vkey=F3C1EB534E2BE04B9E7B9A862497435626F39F72AA3B87ADF76D93ABBAD217AB0A496BD40B2EF62CCE05F1DDC27D17C5E1C32EE97DB79B41&uin=5278&fromtag=66";
-        });
-    },
   },
   watch: {
     currentSong(newSong, oldSong) {
-      console.log('变化');
-     console.log(newSong.mid);
-     
+      console.log("变化");
+      console.log(newSong.mid);
+
       // this.currentPlayURL = this._getSongPlayUrl()
       getSongVKeyUrl(newSong.mid)
         .then(res => {
           console.log("这是详情结果：");
           console.log(res);
-          this.currentPlayURL = res.response.playLists.length
+          if (!res.response.playLists.length || res.response.playLists[1] ==='http://isure.stream.qqmusic.qq.com/') {
+            console.log("当前为代替音频");
+            this.currentPlayURL = "http://sc1.111ttt.cn/2018/1/03/13/396131202421.mp3";
+            this.$toast("当前为代替音频");
+          }else{
+             this.currentPlayURL = res.response.playLists.length
             ? res.response.playLists[1]
-            : "http://221.228.219.152/amobile.music.tc.qq.com/C400000tGLJl2gM0Tw.m4a?guid=6972026032&vkey=F3C1EB534E2BE04B9E7B9A862497435626F39F72AA3B87ADF76D93ABBAD217AB0A496BD40B2EF62CCE05F1DDC27D17C5E1C32EE97DB79B41&uin=5278&fromtag=66";
+            : "http://sc1.111ttt.cn/2018/1/03/13/396131202421.mp3";
+          }
           this.$nextTick(() => {
-        this.$refs.audio.play();
-      });
+            this.$refs.audio.play();
+          });
         })
         .catch(err => {
-          return "http://221.228.219.152/amobile.music.tc.qq.com/C400000tGLJl2gM0Tw.m4a?guid=6972026032&vkey=F3C1EB534E2BE04B9E7B9A862497435626F39F72AA3B87ADF76D93ABBAD217AB0A496BD40B2EF62CCE05F1DDC27D17C5E1C32EE97DB79B41&uin=5278&fromtag=66";
+          return "http://sc1.111ttt.cn/2018/1/03/13/396131202421.mp3";
         });
-      
     },
     playing(newPlay) {
       this.$nextTick(() => {

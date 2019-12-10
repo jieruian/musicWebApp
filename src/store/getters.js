@@ -24,7 +24,7 @@ export const currentSong = (state) => {
 
 export const playUrl = (state) => {
   var song = state.playlist[state.currentIndex] || {}
-  
+  return '1234'
   getSongVKey('003JXflt0ohuO9').then(res => {
     console.log('这VUEX是结果：');
     console.log(res);

@@ -70,11 +70,11 @@ export default {
       console.log(res);
       
     })
-    getSongVKey('003JXflt0ohuO9').then(res => {
-      console.log('这是歌曲的测试结果：');
-      console.log(res);
+    // getSongVKey('003JXflt0ohuO9').then(res => {
+    //   console.log('这是歌曲的测试结果：');
+    //   console.log(res);
       
-    })
+    // })
   },
   methods: {
     _getRecommend() {
