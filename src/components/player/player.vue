@@ -77,8 +77,15 @@
           <p class="desc">{{ currentSong.singer }}</p>
         </div>
         <div class="control">
-          <i @click.stop="togglePlaying" :class="miniIcon"></i>
+          <progress-circle :radius="radius" :percent="percent">
+            <i @click.stop="togglePlaying" class="icon-mini" :class="miniIcon"></i>
+          </progress-circle>
         </div>
+        <!-- <div class="control">
+          <progress-circle :radius="radius" :percent="percent">
+          <i @click.stop="togglePlaying" :class="miniIcon"></i>
+          </progress-circle>
+        </div> -->
         <div class="control">
           <i class="icon-playlist"></i>
         </div>
@@ -100,17 +107,19 @@ import animations from "create-keyframe-animation";
 import { getSongVKeyUrl } from "api/song";
 import { prefixStyle } from "common/js/dom";
 import progressBar from '../progress-bar/progress-bar'
+import progressCircle from '../progress-circle/progress-circle'
 
 const transform = prefixStyle("transform");
 const transitionDuration = prefixStyle("transitionDuration");
 export default {
   name: "player",
-  components:{progressBar},
+  components:{progressBar,progressCircle},
   data() {
     return {
       songReady: false,
       currentPlayURL: "",
       currentTime:'',
+      radius: 32,
     };
   },
   computed: {
