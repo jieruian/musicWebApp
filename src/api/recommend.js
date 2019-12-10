@@ -20,8 +20,7 @@ export function testDemo(url) {
   console.log(`地址:${url}`);
 
   // return jsonp('http://localhost:3200/getSongListCategories', options)
-  return axios.get('api/'+url, {
-  }).then((res) => {
+  return axios.get('localApi/' + url, {}).then((res) => {
     // console.log('看看'+url);
 
     return Promise.resolve(res.data)
@@ -53,3 +52,15 @@ export function getDiscList() {
 
 }
 
+export function getSongVKey(mid) {
+  var urlString = 'localApi/' +
+    `/getSingerDesc?singermid=${mid}`
+  console.log(urlString);
+  
+  return axios.get('/localApi/' +
+    `/getMusicVKey?songmid=${mid}`).then((res) => {
+
+    // console.log(res);
+    return Promise.resolve(res.data)
+  })
+}

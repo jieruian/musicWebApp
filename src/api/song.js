@@ -22,3 +22,16 @@ export function getLyric(mid) {
     return Promise.resolve(res.data)
   })
 }
+
+export function getSongVKeyUrl(mid) {
+  var urlString = 'localApi/' +
+    `/getSingerDesc?singermid=${mid}`
+  console.log(urlString);
+
+  return axios.get('/localApi/' +
+    `/getMusicVKey?songmid=${mid}`).then((res) => {
+
+    // console.log(res);
+    return Promise.resolve(res.data)
+  })
+}

@@ -1,179 +1,258 @@
 <template>
   <div class="player" v-show="playlist.length > 0">
-    <transition name="normal"
-     @enter="enter"
-     @after-enter="afterEnter"
-     @leave="leave"
-     @after-leave="afterLeave"
+    <transition
+      name="normal"
+      @enter="enter"
+      @after-enter="afterEnter"
+      @leave="leave"
+      @after-leave="afterLeave"
     >
-     <div class="normal-player" v-show="fullScreen">
-      <div class="background">
-        <img width="100%" height="100%" :src="currentSong.image"/>
-      </div>
-      <!-- 上部分 -->
-      <div class="top">
-        <div class="back" @click="back">
-          <i class="icon-back"></i>
+      <div class="normal-player" v-show="fullScreen">
+        <div class="background">
+          <img width="100%" height="100%" :src="currentSong.image" />
         </div>
-        <h1 class="title">{{currentSong.name}}</h1>
-        <h2 class="subtitle">{{currentSong.singer}}</h2>
-      </div>
-      <!-- 中间部分 -->
-       <div class="middle">
+        <!-- 上部分 -->
+        <div class="top">
+          <div class="back" @click="back">
+            <i class="icon-back"></i>
+          </div>
+          <h1 class="title">{{ currentSong.name }}</h1>
+          <h2 class="subtitle">{{ currentSong.singer }}</h2>
+        </div>
+        <!-- 中间部分 -->
+        <div class="middle">
           <div class="middle-l" ref="middleL">
             <div class="cd-wrapper" ref="cdWrapper">
               <div class="cd" :class="cdCls">
-                <img class="image" :src="currentSong.image">
+                <img class="image" :src="currentSong.image" />
               </div>
-            </div> 
+            </div>
           </div>
         </div>
         <!-- 下半部分 -->
-      <div class="bottom">
+        <div class="bottom">
           <div class="operators">
             <div class="icon i-left">
               <i class="icon-sequence"></i>
             </div>
-            <div class="icon i-left" >
-              <i  class="icon-prev"></i>
+            <div class="icon i-left">
+              <i @click="prev" class="icon-prev"></i>
             </div>
-            <div class="icon i-center" >
+            <div class="icon i-center">
               <i @click="togglePlaying" :class="playIcon"></i>
             </div>
-            <div class="icon i-right" >
-              <i  class="icon-next"></i>
+            <div class="icon i-right">
+              <i @click="next" class="icon-next"></i>
             </div>
             <div class="icon i-right">
               <i class="icon icon-not-favorite"></i>
             </div>
           </div>
         </div>
-     </div>
+      </div>
     </transition>
     <transition name="mini">
-    <div class="mini-player" v-show="!fullScreen" @click="open">
-        <div class="icon" >
-          <img :class="cdCls" width="40" height="40" v-lazy='currentSong.image'>
+      <div class="mini-player" v-show="!fullScreen" @click="open">
+        <div class="icon">
+          <img
+            :class="cdCls"
+            width="40"
+            height="40"
+            v-lazy="currentSong.image"
+          />
         </div>
         <div class="text">
-          <h2 class="name">{{currentSong.name}}</h2>
-          <p class="desc">{{currentSong.singer}}</p>
+          <h2 class="name">{{ currentSong.name }}</h2>
+          <p class="desc">{{ currentSong.singer }}</p>
         </div>
         <div class="control">
-           <i @click.stop="togglePlaying" :class="miniIcon"></i>
+          <i @click.stop="togglePlaying" :class="miniIcon"></i>
         </div>
         <div class="control">
           <i class="icon-playlist"></i>
         </div>
-    </div>
+      </div>
     </transition>
-    <audio ref="audio" :src="currentSong.url" ></audio>
+    <audio ref="audio" :src="currentPlayURL" @play="ready" @error="error"></audio>
   </div>
 </template>
 
 <script>
-import { mapGetters, mapMutations} from "vuex";
-import animations from 'create-keyframe-animation'
-import {prefixStyle} from 'common/js/dom'
+import { mapGetters, mapMutations } from "vuex";
+import animations from "create-keyframe-animation";
+import { getSongVKeyUrl } from "api/song";
+import { prefixStyle } from "common/js/dom";
 
-const transform = prefixStyle('transform')
-const transitionDuration = prefixStyle('transitionDuration')
+const transform = prefixStyle("transform");
+const transitionDuration = prefixStyle("transitionDuration");
 export default {
   name: "player",
+  data() {
+    return {
+      songReady: false,
+      currentPlayURL:''
+    };
+  },
   computed: {
+    
     cdCls() {
-        return this.playing ? 'play' : 'play pause'
-      },
-      playIcon() {
-        return this.playing ? 'icon-pause' : 'icon-play'
-      },
-      miniIcon() {
-        return this.playing ? 'icon-pause-mini' : 'icon-play-mini'
-      },
-    ...mapGetters(["fullScreen", "playlist",'currentSong','playing'])
+      return this.playing ? "play" : "play pause";
+    },
+    playIcon() {
+      return this.playing ? "icon-pause" : "icon-play";
+    },
+    miniIcon() {
+      return this.playing ? "icon-pause-mini" : "icon-play-mini";
+    },
+    ...mapGetters([
+      "fullScreen",
+      "playlist",
+      "currentSong",
+      "playing",
+      "currentIndex",
+      "playUrl"
+    ])
   },
   methods: {
-      back(){
-        this.setFullScreen(false)
-      },
-      open(){
-       this.setFullScreen(true)
-      },
-      enter(el,done){
-       const {x,y,scale} = this._getPosAndScale
-       let animation = {
-         0:{
+    back() {
+      this.setFullScreen(false);
+    },
+    open() {
+      this.setFullScreen(true);
+    },
+    prev() {
+      if (!this.songReady) return;
+      let index = this.currentIndex - 1;
+      if (index == -1) {
+        index = this.currentIndex - 1;
+      }
+      this.setCurrentIndex(index);
+      this.songReady = false;
+      if (!this.playing) this.togglePlaying();
+    },
+    next() {
+      if (!this.songReady) return;
+      let index = this.currentIndex + 1;
+      if (index == this.playlist.length) {
+        index = 0;
+      }
+      this.setCurrentIndex(index);
+      this.songReady = false;
+      if (!this.playing) this.togglePlaying();
+    },
+    ready() {
+      this.songReady = true;
+    },
+    error() {
+      this.songReady = true;
+    },
+    enter(el, done) {
+      const { x, y, scale } = this._getPosAndScale;
+      let animation = {
+        0: {
           transform: `translate3d(${x}px,${y}px,0) scale(${scale})`
-         },
-         60:{
+        },
+        60: {
           transform: `translate3d(0,0,0) scale(1.1)`
-         },
-         100:{
+        },
+        100: {
           transform: `translate3d(0,0,0) scale(1.0)`
-         }
-       }
-      
-      animations.registerAnimation({
-          name: 'move',
-          animation,
-          presets: {
-            duration: 500,
-            easing: 'linear'
-          }
-        })
-
-      animations.runAnimation(this.$refs.cdWrapper, 'move', done)
-      },
-      afterEnter(){
-        animations.unregisterAnimation('move')
-        this.$refs.cdWrapper.style.animation = ''
-      },
-      leave(el,done){
-       this.$refs.cdWrapper.style.transition = 'all 0.4s'
-        const {x, y, scale} = this._getPosAndScale()
-        this.$refs.cdWrapper.style[transform] = `translate3d(${x}px,${y}px,0) scale(${scale})`
-        this.$refs.cdWrapper.addEventListener('transitionend', done)
-      },
-      afterLeave(){
-        this.$refs.cdWrapper.style.transition = ''
-        this.$refs.cdWrapper.style[transform] = ''
-      },
-      _getPosAndScale() {
-        const targetWidth = 40
-        const paddingLeft = 40
-        const paddingBottom = 30
-        const paddingTop = 80
-        const width = window.innerWidth * 0.8
-        const scale = targetWidth / width
-        const x = -(window.innerWidth / 2 - paddingLeft)
-        const y = window.innerHeight - paddingTop - width / 2 - paddingBottom
-        return {
-          x,
-          y,
-          scale
         }
-      },
-      //暂停还是播放
-      togglePlaying(){
-       this.setPlayingState(!this.playing)
-      },
-      ...mapMutations({
-          setFullScreen:'SET_FULL_SCREEN',
-          setPlayingState:'SET_PLAYING_STATE'
-      })
+      };
+
+      animations.registerAnimation({
+        name: "move",
+        animation,
+        presets: {
+          duration: 500,
+          easing: "linear"
+        }
+      });
+
+      animations.runAnimation(this.$refs.cdWrapper, "move", done);
+    },
+    afterEnter() {
+      animations.unregisterAnimation("move");
+      this.$refs.cdWrapper.style.animation = "";
+    },
+    leave(el, done) {
+      this.$refs.cdWrapper.style.transition = "all 0.4s";
+      const { x, y, scale } = this._getPosAndScale();
+      this.$refs.cdWrapper.style[
+        transform
+      ] = `translate3d(${x}px,${y}px,0) scale(${scale})`;
+      this.$refs.cdWrapper.addEventListener("transitionend", done);
+    },
+    afterLeave() {
+      this.$refs.cdWrapper.style.transition = "";
+      this.$refs.cdWrapper.style[transform] = "";
+    },
+    _getPosAndScale() {
+      const targetWidth = 40;
+      const paddingLeft = 40;
+      const paddingBottom = 30;
+      const paddingTop = 80;
+      const width = window.innerWidth * 0.8;
+      const scale = targetWidth / width;
+      const x = -(window.innerWidth / 2 - paddingLeft);
+      const y = window.innerHeight - paddingTop - width / 2 - paddingBottom;
+      return {
+        x,
+        y,
+        scale
+      };
+    },
+    //暂停还是播放
+    togglePlaying() {
+      this.setPlayingState(!this.playing);
+    },
+    ...mapMutations({
+      setFullScreen: "SET_FULL_SCREEN",
+      setPlayingState: "SET_PLAYING_STATE",
+      setCurrentIndex: "SET_CURRENT_INDEX"
+    }),
+    _getSongPlayUrl() {
+      getSongVKeyUrl("003JXflt0ohuO9")
+        .then(res => {
+          console.log("这是详情结果：");
+          console.log(res);
+          return res.response.playLists.length
+            ? res.response.playLists[1]
+            : "http://221.228.219.152/amobile.music.tc.qq.com/C400000tGLJl2gM0Tw.m4a?guid=6972026032&vkey=F3C1EB534E2BE04B9E7B9A862497435626F39F72AA3B87ADF76D93ABBAD217AB0A496BD40B2EF62CCE05F1DDC27D17C5E1C32EE97DB79B41&uin=5278&fromtag=66";
+        })
+        .catch(err => {
+          return "http://221.228.219.152/amobile.music.tc.qq.com/C400000tGLJl2gM0Tw.m4a?guid=6972026032&vkey=F3C1EB534E2BE04B9E7B9A862497435626F39F72AA3B87ADF76D93ABBAD217AB0A496BD40B2EF62CCE05F1DDC27D17C5E1C32EE97DB79B41&uin=5278&fromtag=66";
+        });
+    },
   },
   watch: {
-    currentSong(newSong, oldSong){
-      this.$nextTick(()=>{
-         this.$refs.audio.play()
-      })
+    currentSong(newSong, oldSong) {
+      console.log('变化');
+     console.log(newSong.mid);
+     
+      // this.currentPlayURL = this._getSongPlayUrl()
+      getSongVKeyUrl(newSong.mid)
+        .then(res => {
+          console.log("这是详情结果：");
+          console.log(res);
+          this.currentPlayURL = res.response.playLists.length
+            ? res.response.playLists[1]
+            : "http://221.228.219.152/amobile.music.tc.qq.com/C400000tGLJl2gM0Tw.m4a?guid=6972026032&vkey=F3C1EB534E2BE04B9E7B9A862497435626F39F72AA3B87ADF76D93ABBAD217AB0A496BD40B2EF62CCE05F1DDC27D17C5E1C32EE97DB79B41&uin=5278&fromtag=66";
+          this.$nextTick(() => {
+        this.$refs.audio.play();
+      });
+        })
+        .catch(err => {
+          return "http://221.228.219.152/amobile.music.tc.qq.com/C400000tGLJl2gM0Tw.m4a?guid=6972026032&vkey=F3C1EB534E2BE04B9E7B9A862497435626F39F72AA3B87ADF76D93ABBAD217AB0A496BD40B2EF62CCE05F1DDC27D17C5E1C32EE97DB79B41&uin=5278&fromtag=66";
+        });
+      
     },
-    playing(newPlay){
+    playing(newPlay) {
       this.$nextTick(() => {
-        newPlay ? this.$refs.audio.play() : this.$refs.audio.pause()
-      })
+        newPlay ? this.$refs.audio.play() : this.$refs.audio.pause();
+      });
     }
-  },
+  }
 };
 </script>
 

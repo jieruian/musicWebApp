@@ -28,6 +28,16 @@ module.exports = {
         pathRewrite: {
           '^/api': ''
         }
+      },
+      '/localApi': {
+        // target: 'https://c.y.qq.com/',
+        target: 'http://localhost:3200/',
+        historyApiFallBack: true,
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: {
+          '^/localApi': 'http://localhost:3200/'
+        }
       }
     },
     //添加一个before方法

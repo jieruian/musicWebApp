@@ -4,6 +4,8 @@ import {
   options,
 } from './config'
 
+import axios from 'axios'
+
 export function getSingerList() {
   const url = 'https://c.y.qq.com/v8/fcg-bin/v8.fcg'
 
@@ -37,4 +39,17 @@ export function getSingerDetail(singerId) {
   })
 
   return jsonp(url, data, options)
+}
+
+export function getLocalSingerDetail(singerId) {
+  var urlString = 'localApi/' +
+    `/getSingerDesc?singermid=${singerId}`
+    console.log(urlString);
+    
+  return axios.get('localApi/'
+      +`/getSingerDesc?singermid=${singerId}`).then((res) => {
+    console.log("歌曲详情的结果----");
+    console.log(res);  
+    return Promise.resolve(res.data)
+  })
 }

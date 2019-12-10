@@ -12,7 +12,9 @@ import { getSingerList } from "api/singer";
 import { ERR_OK } from "api/config";
 import Singer from 'common/js/singer';
 import AddressBookView from "components/AddressBookView/AddressBookView";
- import {mapMutations} from 'vuex'
+import {mapMutations} from 'vuex'
+import {getSongVKey} from "api/recommend";
+
 export default {
   name: "singer",
   components:{
@@ -26,6 +28,10 @@ export default {
   },
   created() {
       this._getSingerList();
+      getSongVKey('003JXflt0ohuO9').then(res => {
+      console.log('这是歌曲的测试结果======：');
+      console.log(res); 
+    })
   },
  
   methods: {
