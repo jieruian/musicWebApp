@@ -106,6 +106,7 @@ import progressBar from '../progress-bar/progress-bar'
 import progressCircle from '../progress-circle/progress-circle'
 import {playMode} from 'common/js/config.js'
 import {shuffle} from "common/js/util.js"
+import Lyric from 'lyric-parser'
 
 const transform = prefixStyle("transform");
 const transitionDuration = prefixStyle("transitionDuration");
@@ -118,6 +119,7 @@ export default {
       currentPlayURL: "",
       currentTime:'',
       radius: 32,
+      currentLyric: null,
     };
   },
   computed: {
@@ -307,6 +309,27 @@ export default {
       setPlayList : 'SET_PLAYLIST',
 
     }),
+    // 歌词处理
+     // 歌词处理
+    getLyric(){
+       this.currentSong.getLyric().then((lyric) => {
+         this.currentLyric = new Lyric(lyric)
+         console.log(this.currentLyric);
+         
+          // if (this.currentSong.lyric !== lyric) {
+          //   return
+          // }
+          // this.currentLyric = new Lyric(lyric, this.handleLyric)
+          // if (this.playing) {
+          //   this.currentLyric.play()
+          // }
+        }).catch(() => {
+          // this.currentLyric = null
+          // this.playingLyric = ''
+          // this.currentLineNum = 0
+        })
+    },
+    
      _pad(num, n = 2) {
         let len = num.toString().length
         while (len < n) {
@@ -326,15 +349,16 @@ export default {
           console.log(res);
           if (!res.response.playLists.length || res.response.playLists[1] ==='http://isure.stream.qqmusic.qq.com/') {
             console.log("当前为代替音频");
-            this.currentPlayURL = "http://sc1.111ttt.cn/2018/1/03/13/396131202421.mp3";
+            this.currentPlayURL = "http://mp3.9ku.com/m4a2/643297.m4a";
             this.$toast("当前为代替音频");
           }else{
              this.currentPlayURL = res.response.playLists.length
             ? res.response.playLists[1]
-            : "http://sc1.111ttt.cn/2018/1/03/13/396131202421.mp3";
+            : "http://mp3.9ku.com/m4a2/643297.m4a";
           }
           this.$nextTick(() => {
             this.$refs.audio.play();
+            this.getLyric()
           });
         })
         .catch(err => {
