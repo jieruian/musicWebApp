@@ -2,9 +2,10 @@
   <div id="swiper">
     <van-swipe :autoplay="3000" @change="onChange" indicator-color="white">
       <van-swipe-item
-        v-for="item in banners"
-        :key="item + Math.random()"
-        @click="itemClick"
+        v-for="(item,index) in banners"
+        :key="index"
+        @click="itemClick(index)"
+        :stop-propagation='false'
       >
         <!-- <a :href="item.linkUrl"> -->
           <img :src="item.picUrl" alt="" @load="imageLoaded" />
@@ -48,6 +49,7 @@ export default {
     itemClick(index) {
       console.log(index);
       //    Toast('当前 Swipe 索引：' + index);
+      this.$emit("itemClick",index)
       this.$toast("当前 Swipe 索引：" + index);
     }
   }

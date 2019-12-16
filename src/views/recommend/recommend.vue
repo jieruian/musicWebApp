@@ -3,7 +3,17 @@
     <div class="loading-show" v-show="isShowRefresh">
       <van-loading type="spinner" color="#28B8A1" size="36"></van-loading>
     </div>
-
+<previewer :list="list" ref="previewer" :options="{tapToClose:false}">
+      <!-- <template slot-scope="{current}" slot="topbar">
+        <div>
+          <span>{{current+1}} of {{list.length}}</span>
+          <a @click="$refs.previewer.close()">关闭</a>
+        </div>
+      </template>
+      <template slot-scope="{current}" slot="caption">
+        <some-caption :captionData="list[current].captionData"></some-caption>
+      </template> -->
+    </previewer>
     <scroll
       class="recommend-content"
       ref="scroll"
@@ -16,6 +26,7 @@
       <miti-swiper
         :banners="banners"
         @swiperImageLoad="swiperImageLoad"
+        @itemClick='itemClick'
       ></miti-swiper>
       <div class="recommend-list">
         <h1 class="list-title">热门歌单推荐</h1>
@@ -23,7 +34,7 @@
           <loading title="加载ing"></loading>
         </div>
         <ul>
-          <li v-for="(item, index) in discList" :key="index" class="item">
+          <li v-for="(item, index) in discList" :key="index" class="item" @click="songListItemClick(index)">
             <div class="icon">
               <img v-lazy="item.imgurl" style="height:60px;width:60px" />
             </div>
@@ -39,7 +50,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-//   import Slider from 'base/slider/slider'
+import previewer from 'vue-photoswipe-mobile'
 import Loading from "components/loading/loading";
 import MitiSwiper from "components/swiper/MitiSwiper";
 import Scroll from "components/scroll/Scroll";
@@ -53,13 +64,15 @@ export default {
   components: {
     MitiSwiper,
     Scroll,
-    Loading
+    Loading,
+    previewer
   },
   data() {
     return {
       banners: [],
       discList: [],
-      isShowRefresh: false
+      isShowRefresh: false,
+      list:[]
     };
   },
   created() {
@@ -82,6 +95,7 @@ export default {
         // console.log(res.data.slider)
         if (res.code === ERR_OK) {
           this.banners = res.data.slider;
+          this.list = this._getNewListImage(this.banners)
         } else {
         }
       });
@@ -119,6 +133,30 @@ export default {
         this.checkloaded = true;
         this.$refs.scroll.refresh();
       }
+    },
+    itemClick(index){ 
+      this.list = this._getNewListImage(this.banners)
+      this.$nextTick(()=>{
+      this.$refs.previewer.show(index)
+      })     
+    },
+    songListItemClick(index){
+     this.list = [{src: "https://img2.ch999img.com/newstatic/1380/01392af47d6b9550"}]
+     this.list.splice(0);
+     this.discList.forEach((item) => {
+      this.list.push({src:item.imgurl})
+     })
+     this.$nextTick(() => {
+       this.$refs.previewer.show(index)
+     }) 
+    },
+    _getNewListImage(array){
+     if (!array.length) return
+     var box = []
+     array.forEach((item) => {
+      box.push({src:item.picUrl})
+     })
+     return box
     }
   }
 };
