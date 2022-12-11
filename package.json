@@ -28,7 +28,7 @@
     "@vue/cli-plugin-babel": "^4.0.0",
     "@vue/cli-service": "^4.0.0",
     "css-loader": "^3.2.0",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "style-resources-loader": "^1.2.1",
     "stylus": "^0.54.7",
     "stylus-loader": "^3.0.2",
